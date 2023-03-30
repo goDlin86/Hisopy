@@ -15,7 +15,8 @@ struct PersistenceController {
         let viewContext = result.container.viewContext
         for _ in 0..<10 {
             let newItem = Item(context: viewContext)
-            newItem.timestamp = Date()
+            newItem.text = Date().formatted()
+            newItem.firstCopiedAt = Date()
         }
         do {
             try viewContext.save()
