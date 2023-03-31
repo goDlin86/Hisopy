@@ -11,6 +11,7 @@ import CoreData
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject var appState: AppState
+    @Environment(\.dismiss) var dismiss
 
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \Item.firstCopiedAt, ascending: false)],
@@ -49,6 +50,7 @@ struct ContentView: View {
         UserDefaults.standard.set(true, forKey: "ignoreOnlyNextEvent")
         Clipboard.shared.paste()
         NSApp.hide(self)
+        dismiss()
     }
 
     private func deleteItems(offsets: IndexSet) {

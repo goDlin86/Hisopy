@@ -31,14 +31,12 @@ class Clipboard {
     private var extraVisibleWindows: [NSWindow] {
         return NSApp.windows.filter({ $0.isVisible && String(describing: type(of: $0)) != "NSStatusBarWindow" })
     }
-    
-    @Environment(\.openWindow) var openWindow
        
     init() {
         changeCount = pasteboard.changeCount
         KeyboardShortcuts.reset(.popup)
         KeyboardShortcuts.onKeyDown(for: .popup) {
-            self.popup()
+           NotificationCenter.default.post(name: NSNotification.Name("open"), object: nil)
         }
         Timer.scheduledTimer(withTimeInterval: timerInterval, repeats: true) { t in
             self.checkForChangesInPasteboard()
@@ -63,13 +61,15 @@ class Clipboard {
         
         pasteboard.pasteboardItems?.forEach({ item in
             let types = Set(item.types)
-            if types.contains(.string) && isEmptyString(item) && !richText(item) {
-                return
+            if types.contains(.string) {
+                if isEmptyString(item) && !richText(item) {
+                    return
+                }
+                
+                let newItem = Item(context: viewContext)
+                newItem.text = item.string(forType: .string)
+                newItem.firstCopiedAt = Date()
             }
-            
-            let newItem = Item(context: viewContext)
-            newItem.text = item.string(forType: .string)
-            newItem.firstCopiedAt = Date()
         })
         
         let fetchRequest = NSFetchRequest<Item>(entityName: "Item")
@@ -77,9 +77,10 @@ class Clipboard {
         
         do {
             let items = try viewContext.fetch(fetchRequest)
-            if items.count > maxItem {
-                items.suffix(from: maxItem).forEach(viewContext.delete)
-            }
+            zip(items.indices, items)
+                .filter { ($0 > 0 && $1.text == items[0].text) || $0 > maxItem }
+                .map { $1 }
+                .forEach(viewContext.delete)
         
             try viewContext.save()
         } catch {
@@ -142,17 +143,7 @@ class Clipboard {
             keyVUp?.post(tap: .cgAnnotatedSessionEventTap)
         }
     }
-    
-    func popup() {
-        //let windowFrame = NSWorkspace.shared.frontmostApplication?.window
-        
-        withFocus {
-            if let frame = NSScreen.main?.visibleFrame {
-                //self.openWindow(id: "HistoryMenu")
-            }
-        }
-    }
-    
+      
     private func withFocus(_ closure: @escaping () -> Void) {
         //KeyboardShortcuts.disable(.popup)
 

@@ -16,6 +16,7 @@ struct HisopyApp: App {
     @Environment(\.openWindow) var openWindow
     
     private let clipboard = Clipboard.shared
+    private let pubOpen = NotificationCenter.default.publisher(for: NSNotification.Name("open"))
 
     var body: some Scene {
         MenuBarExtra("Hisopy", systemImage: "circle") {
@@ -33,6 +34,10 @@ struct HisopyApp: App {
                     Text("Settings")
                         .foregroundColor(.white)
                 }
+                .onReceive(pubOpen) { _ in
+                    NSApp.activate(ignoringOtherApps: true)
+                    openWindow(id: "History")
+                }
                 Button(action: {
                     NSApplication.shared.terminate(nil)
                 }) {
@@ -41,32 +46,31 @@ struct HisopyApp: App {
                 }
                 .keyboardShortcut("q")
             }
-            .padding(.bottom, 2)
+            .padding(.bottom, 5)
         }
         .defaultPosition(.bottomTrailing)
         .menuBarExtraStyle(.window)
         //.keyboardShortcut("b")
         
         Window("Settings", id: "Settings") {
-            Group {
+            VStack {
                 LaunchAtLogin.Toggle()
                 KeyboardShortcuts.Recorder(for: .popup) {
                     Text("Open paste history")
                         .fixedSize()
                 }
             }
-            .padding(20)
+            .padding(20)           
         }
         .windowResizability(.contentSize)
         
-        Window("History menu", id: "HistoryMenu") {
+        Window("Clipboard History", id: "History") {
             ContentView()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
                 .environmentObject(appState)
-                .frame(width: 300, height: 350)
+                .frame(width: 300, height: 300)
         }
-        .defaultPosition(.top)
+        .defaultPosition(.center)
         .windowResizability(.contentSize)
-        .windowStyle(.hiddenTitleBar)
     }
 }
