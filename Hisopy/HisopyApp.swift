@@ -12,7 +12,6 @@ import KeyboardShortcuts
 @main
 struct HisopyApp: App {
     let persistenceController = PersistenceController.shared
-    @StateObject private var appState = AppState()
     @Environment(\.openWindow) var openWindow
     
     private let clipboard = Clipboard.shared
@@ -33,7 +32,6 @@ struct HisopyApp: App {
         MenuBarExtra("Hisopy", systemImage: "circle") {
             ContentView()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
-                .environmentObject(appState)
             
             Divider()
 
@@ -53,7 +51,7 @@ struct HisopyApp: App {
                 }
                 .keyboardShortcut("q")
             }
-            .padding(.bottom, 5)
+            .padding(.bottom, 7)
         }
         .menuBarExtraStyle(.window)
         
@@ -61,7 +59,7 @@ struct HisopyApp: App {
             VStack {
                 LaunchAtLogin.Toggle()
                 KeyboardShortcuts.Recorder(for: .popup) {
-                    Text("Open paste history")
+                    Text("Open clipboard history")
                         .fixedSize()
                 }
             }
@@ -72,7 +70,6 @@ struct HisopyApp: App {
         Window("Clipboard History", id: "History") {
             ContentView()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
-                .environmentObject(appState)
                 .frame(width: 300, height: 300)
         }
         .defaultPosition(.center)

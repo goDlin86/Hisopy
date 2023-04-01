@@ -10,7 +10,6 @@ import CoreData
 
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
-    @EnvironmentObject var appState: AppState
     @Environment(\.dismiss) var dismiss
 
     @FetchRequest(
@@ -21,26 +20,32 @@ struct ContentView: View {
     @State var hovered: Item?
 
     var body: some View {
-        List {
-            ForEach(items) { item in
-                Button(action: {
-                    self.copyItem(item.text ?? "")
-                }) {
-                    Text(item.text ?? "")
-                        .lineLimit(2)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                }
-                .background(self.hovered == item ? Color(red: 0.35, green: 0.35, blue: 0.35) : .clear)
-                .cornerRadius(5)
-                .onHover { hover in
-                    if hover {
-                        self.hovered = item
-                    } else {
-                        self.hovered = nil
+        if items.isEmpty {
+            Text("No clipboard history")
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .foregroundColor(.secondary)
+        } else {
+            List {
+                ForEach(items) { item in
+                    Button(action: {
+                        self.copyItem(item.text ?? "")
+                    }) {
+                        Text(item.text ?? "")
+                            .lineLimit(2)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                    .background(self.hovered == item ? Color(red: 0.35, green: 0.35, blue: 0.35) : .clear)
+                    .cornerRadius(5)
+                    .onHover { hover in
+                        if hover {
+                            self.hovered = item
+                        } else {
+                            self.hovered = nil
+                        }
                     }
                 }
+                .onDelete(perform: deleteItems)
             }
-            .onDelete(perform: deleteItems)
         }
     }
     

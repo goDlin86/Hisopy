@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		9241660929D4903F0074603E /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 9241660829D4903F0074603E /* LaunchAtLogin */; };
-		9296691429C360A3008FFF7C /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9296691329C360A3008FFF7C /* AppState.swift */; };
 		9296691629C3794D008FFF7C /* Clipboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9296691529C3794D008FFF7C /* Clipboard.swift */; };
 		92A9C77529C21D52002E2C79 /* HisopyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92A9C77429C21D52002E2C79 /* HisopyApp.swift */; };
 		92A9C77729C21D52002E2C79 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92A9C77629C21D52002E2C79 /* ContentView.swift */; };
@@ -41,7 +40,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		9296691329C360A3008FFF7C /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		9296691529C3794D008FFF7C /* Clipboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Clipboard.swift; sourceTree = "<group>"; };
 		92A9C77129C21D52002E2C79 /* Hisopy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Hisopy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		92A9C77429C21D52002E2C79 /* HisopyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HisopyApp.swift; sourceTree = "<group>"; };
@@ -117,7 +115,6 @@
 				92A9C77F29C21D53002E2C79 /* Hisopy.xcdatamodeld */,
 				92A9C77A29C21D53002E2C79 /* Preview Content */,
 				92A9C7A729C23D4B002E2C79 /* Constants.swift */,
-				9296691329C360A3008FFF7C /* AppState.swift */,
 				9296691529C3794D008FFF7C /* Clipboard.swift */,
 			);
 			path = Hisopy;
@@ -289,7 +286,6 @@
 				92A9C7A829C23D4B002E2C79 /* Constants.swift in Sources */,
 				92A9C77E29C21D53002E2C79 /* Persistence.swift in Sources */,
 				92A9C77729C21D52002E2C79 /* ContentView.swift in Sources */,
-				9296691429C360A3008FFF7C /* AppState.swift in Sources */,
 				9296691629C3794D008FFF7C /* Clipboard.swift in Sources */,
 				92A9C77529C21D52002E2C79 /* HisopyApp.swift in Sources */,
 				92A9C78129C21D53002E2C79 /* Hisopy.xcdatamodeld in Sources */,
