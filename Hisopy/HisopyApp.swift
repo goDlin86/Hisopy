@@ -19,6 +19,7 @@ struct HisopyApp: App {
     private let pubOpen = NotificationCenter.default.publisher(for: NSNotification.Name("open"))
 
     var body: some Scene {
+        //Hidden empty window for open History window by keyboard shortcut
         WindowGroup {
             EmptyView()
                 .onReceive(pubOpen) { _ in

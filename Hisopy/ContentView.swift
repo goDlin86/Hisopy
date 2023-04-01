@@ -37,11 +37,7 @@ struct ContentView: View {
                     .background(self.hovered == item ? Color(red: 0.35, green: 0.35, blue: 0.35) : .clear)
                     .cornerRadius(5)
                     .onHover { hover in
-                        if hover {
-                            self.hovered = item
-                        } else {
-                            self.hovered = nil
-                        }
+                        self.hovered = hover ? item : nil
                     }
                 }
                 .onDelete(perform: deleteItems)

@@ -34,10 +34,12 @@ class Clipboard {
        
     init() {
         changeCount = pasteboard.changeCount
+        
         KeyboardShortcuts.reset(.popup)
         KeyboardShortcuts.onKeyDown(for: .popup) {
             NotificationCenter.default.post(name: NSNotification.Name("open"), object: nil)
         }
+        
         Timer.scheduledTimer(withTimeInterval: timerInterval, repeats: true) { t in
             self.checkForChangesInPasteboard()
         }
@@ -76,14 +78,14 @@ class Clipboard {
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Item.firstCopiedAt, ascending: false)]
         
         do {
-            let items = try viewContext.fetch(fetchRequest)
+            var items = try viewContext.fetch(fetchRequest)
             items.suffix(from: 1).filter { $0.text == items[0].text }.forEach(viewContext.delete)
             
             try viewContext.save()
             
-            let itemsNew = try viewContext.fetch(fetchRequest)
-            if itemsNew.count > maxItem {
-                itemsNew.suffix(from: maxItem).forEach(viewContext.delete)
+            items = try viewContext.fetch(fetchRequest)
+            if items.count > maxItem {
+                items.suffix(from: maxItem).forEach(viewContext.delete)
             }
         
             try viewContext.save()
@@ -145,19 +147,6 @@ class Clipboard {
             keyVUp?.flags = .maskCommand
             keyVDown?.post(tap: .cgAnnotatedSessionEventTap)
             keyVUp?.post(tap: .cgAnnotatedSessionEventTap)
-        }
-    }
-      
-    private func withFocus(_ closure: @escaping () -> Void) {
-        //KeyboardShortcuts.disable(.popup)
-
-        NSApp.activate(ignoringOtherApps: true)
-        Timer.scheduledTimer(withTimeInterval: 0.04, repeats: false) { _ in
-            closure()
-            //KeyboardShortcuts.enable(.popup)
-            if self.extraVisibleWindows.count == 0 {
-                NSApp.hide(self)
-            }
         }
     }
 }
