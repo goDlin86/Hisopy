@@ -16,9 +16,20 @@ struct HisopyApp: App {
     @Environment(\.openWindow) var openWindow
     
     private let clipboard = Clipboard.shared
+    
     private let pubOpen = NotificationCenter.default.publisher(for: NSNotification.Name("open"))
 
     var body: some Scene {
+        WindowGroup {
+            EmptyView()
+                .onReceive(pubOpen) { _ in
+                    NSApp.activate(ignoringOtherApps: true)
+                    openWindow(id: "History")
+                }
+                .frame(width: 0, height: 0)
+        }
+        .windowResizability(.contentSize)
+        
         MenuBarExtra("Hisopy", systemImage: "circle") {
             ContentView()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
@@ -34,10 +45,6 @@ struct HisopyApp: App {
                     Text("Settings")
                         .foregroundColor(.white)
                 }
-                .onReceive(pubOpen) { _ in
-                    NSApp.activate(ignoringOtherApps: true)
-                    openWindow(id: "History")
-                }
                 Button(action: {
                     NSApplication.shared.terminate(nil)
                 }) {
@@ -48,9 +55,7 @@ struct HisopyApp: App {
             }
             .padding(.bottom, 5)
         }
-        .defaultPosition(.bottomTrailing)
         .menuBarExtraStyle(.window)
-        //.keyboardShortcut("b")
         
         Window("Settings", id: "Settings") {
             VStack {
@@ -60,7 +65,7 @@ struct HisopyApp: App {
                         .fixedSize()
                 }
             }
-            .padding(20)           
+            .padding(20)
         }
         .windowResizability(.contentSize)
         

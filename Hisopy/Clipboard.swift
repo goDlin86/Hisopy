@@ -36,7 +36,7 @@ class Clipboard {
         changeCount = pasteboard.changeCount
         KeyboardShortcuts.reset(.popup)
         KeyboardShortcuts.onKeyDown(for: .popup) {
-           NotificationCenter.default.post(name: NSNotification.Name("open"), object: nil)
+            NotificationCenter.default.post(name: NSNotification.Name("open"), object: nil)
         }
         Timer.scheduledTimer(withTimeInterval: timerInterval, repeats: true) { t in
             self.checkForChangesInPasteboard()
@@ -77,10 +77,14 @@ class Clipboard {
         
         do {
             let items = try viewContext.fetch(fetchRequest)
-            zip(items.indices, items)
-                .filter { ($0 > 0 && $1.text == items[0].text) || $0 > maxItem }
-                .map { $1 }
-                .forEach(viewContext.delete)
+            items.suffix(from: 1).filter { $0.text == items[0].text }.forEach(viewContext.delete)
+            
+            try viewContext.save()
+            
+            let itemsNew = try viewContext.fetch(fetchRequest)
+            if itemsNew.count > maxItem {
+                itemsNew.suffix(from: maxItem).forEach(viewContext.delete)
+            }
         
             try viewContext.save()
         } catch {
