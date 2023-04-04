@@ -26,13 +26,13 @@ class Clipboard {
     ]
     
     private let viewContext = PersistenceController.shared.container.viewContext
-    private let maxItem = 10
-    
-    private var extraVisibleWindows: [NSWindow] {
-        return NSApp.windows.filter({ $0.isVisible && String(describing: type(of: $0)) != "NSStatusBarWindow" })
-    }
+    private var maxItems: Int { UserDefaults.standard.integer(forKey: "maxItems") }
        
     init() {
+        UserDefaults.standard.register(defaults: [
+            "maxItems": 10
+        ])
+        
         changeCount = pasteboard.changeCount
         
         KeyboardShortcuts.reset(.popup)
@@ -84,8 +84,8 @@ class Clipboard {
             try viewContext.save()
             
             items = try viewContext.fetch(fetchRequest)
-            if items.count > maxItem {
-                items.suffix(from: maxItem).forEach(viewContext.delete)
+            if items.count > maxItems {
+                items.suffix(from: maxItems).forEach(viewContext.delete)
             }
         
             try viewContext.save()

@@ -17,6 +17,8 @@ struct HisopyApp: App {
     private let clipboard = Clipboard.shared
     
     private let pubOpen = NotificationCenter.default.publisher(for: NSNotification.Name("open"))
+    
+    @AppStorage("maxItems") var maxItems = 10
 
     var body: some Scene {
         //Hidden empty window for open History window by keyboard shortcut
@@ -63,6 +65,8 @@ struct HisopyApp: App {
                     Text("Open clipboard history")
                         .fixedSize()
                 }
+                Stepper("Max items: \(maxItems)", value: $maxItems, in: 5...15)
+
             }
             .padding(20)
         }
