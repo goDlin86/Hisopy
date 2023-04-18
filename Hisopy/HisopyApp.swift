@@ -11,11 +11,10 @@ import KeyboardShortcuts
 
 @main
 struct HisopyApp: App {
-    let persistenceController = PersistenceController.shared
     @Environment(\.openWindow) var openWindow
     
+    private let persistenceController = PersistenceController.shared
     private let clipboard = Clipboard.shared
-    
     private let pubOpen = NotificationCenter.default.publisher(for: NSNotification.Name("open"))
     
     @AppStorage("maxItems") var maxItems = 10
@@ -32,7 +31,7 @@ struct HisopyApp: App {
         }
         .windowResizability(.contentSize)
         
-        MenuBarExtra("Hisopy", systemImage: "circle") {
+        MenuBarExtra("Hisopy", systemImage: "command") {
             ContentView()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
             
@@ -66,7 +65,6 @@ struct HisopyApp: App {
                         .fixedSize()
                 }
                 Stepper("Max items: \(maxItems)", value: $maxItems, in: 5...15)
-
             }
             .padding(20)
         }

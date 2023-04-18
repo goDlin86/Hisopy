@@ -13,7 +13,9 @@ struct ContentView: View {
     @Environment(\.dismiss) var dismiss
 
     @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \Item.firstCopiedAt, ascending: false)],
+        sortDescriptors: [
+            NSSortDescriptor(keyPath: \Item.pin, ascending: false),
+            NSSortDescriptor(keyPath: \Item.firstCopiedAt, ascending: false)],
         animation: .default)
     private var items: FetchedResults<Item>
     
@@ -34,10 +36,18 @@ struct ContentView: View {
                             .lineLimit(2)
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
-                    .background(self.hovered == item ? Color(red: 0.35, green: 0.35, blue: 0.35) : .clear)
+                    .background(self.hovered == item ? Color(red: 0.35, green: 0.35, blue: 0.35) : item.pin ? .indigo : .clear)
                     .cornerRadius(5)
                     .onHover { hover in
                         self.hovered = hover ? item : nil
+                    }
+                    .swipeActions(edge: .leading) {
+                        Button {
+                            pinItem(item)
+                        } label: {
+                            Label("Pin", systemImage: "pin")
+                        }
+                        .tint(.orange)
                     }
                 }
                 .onDelete(perform: deleteItems)
@@ -53,6 +63,19 @@ struct ContentView: View {
         NSApp.hide(self)
         dismiss()
     }
+    
+    private func pinItem(_ item: Item) {
+        withAnimation {
+            item.pin = !item.pin
+            
+            do {
+                try viewContext.save()
+            } catch {
+                let nsError = error as NSError
+                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+            }
+        }
+    }
 
     private func deleteItems(offsets: IndexSet) {
         withAnimation {
@@ -61,8 +84,6 @@ struct ContentView: View {
             do {
                 try viewContext.save()
             } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
                 let nsError = error as NSError
                 fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
             }

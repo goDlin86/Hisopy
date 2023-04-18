@@ -84,14 +84,10 @@ class Clipboard {
             try viewContext.save()
             
             items = try viewContext.fetch(fetchRequest)
-            if items.count > maxItems {
-                items.suffix(from: maxItems).forEach(viewContext.delete)
-            }
+            items.suffix(from: maxItems).forEach(viewContext.delete)
         
             try viewContext.save()
         } catch {
-            // Replace this implementation with code to handle the error appropriately.
-            // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
             let nsError = error as NSError
             fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
         }
