@@ -14,8 +14,9 @@ struct ContentView: View {
 
     @FetchRequest(
         sortDescriptors: [
-            NSSortDescriptor(keyPath: \Item.pin, ascending: false),
-            NSSortDescriptor(keyPath: \Item.firstCopiedAt, ascending: false)],
+            SortDescriptor(\.pin, order: .reverse),
+            SortDescriptor(\.firstCopiedAt, order: .reverse)
+        ],
         animation: .default)
     private var items: FetchedResults<Item>
     
@@ -45,7 +46,7 @@ struct ContentView: View {
                         Button {
                             pinItem(item)
                         } label: {
-                            Label("Pin", systemImage: "pin")
+                            Label("Pin", systemImage: item.pin ? "pin.slash" : "pin")
                         }
                         .tint(.orange)
                     }

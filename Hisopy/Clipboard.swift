@@ -75,7 +75,10 @@ class Clipboard {
         })
         
         let fetchRequest = NSFetchRequest<Item>(entityName: "Item")
-        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Item.firstCopiedAt, ascending: false)]
+        fetchRequest.sortDescriptors = [
+            NSSortDescriptor(keyPath: \Item.firstCopiedAt, ascending: false)
+        ]
+        fetchRequest.predicate = NSPredicate(format: "%K == false", #keyPath(Item.pin))
         
         do {
             var items = try viewContext.fetch(fetchRequest)
