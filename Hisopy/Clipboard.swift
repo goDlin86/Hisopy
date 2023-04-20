@@ -87,7 +87,9 @@ class Clipboard {
             try viewContext.save()
             
             items = try viewContext.fetch(fetchRequest)
-            items.suffix(from: maxItems).forEach(viewContext.delete)
+            if items.count > maxItems {
+                items.suffix(from: maxItems).forEach(viewContext.delete)
+            }
         
             try viewContext.save()
         } catch {

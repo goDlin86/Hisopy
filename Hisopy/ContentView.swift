@@ -34,14 +34,21 @@ struct ContentView: View {
                         self.copyItem(item.text ?? "")
                     }) {
                         Text(item.text ?? "")
+                            .foregroundColor(.white)
                             .lineLimit(2)
+                            .multilineTextAlignment(.leading)
                             .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.horizontal, 5)
+                            .padding(.vertical, 2)
                     }
-                    .background(self.hovered == item ? Color(red: 0.35, green: 0.35, blue: 0.35) : item.pin ? .indigo : .clear)
+                    .buttonStyle(.borderless)
+                    .background(item.pin ? .indigo : Color(white: 1, opacity: 0.1))
+                    .opacity(self.hovered == item ? 0.75 : 1)
                     .cornerRadius(5)
                     .onHover { hover in
                         self.hovered = hover ? item : nil
                     }
+                    .animation(.easeIn(duration: 0.2), value: hovered)
                     .swipeActions(edge: .leading) {
                         Button {
                             pinItem(item)
@@ -53,6 +60,7 @@ struct ContentView: View {
                 }
                 .onDelete(perform: deleteItems)
             }
+            
         }
     }
     
