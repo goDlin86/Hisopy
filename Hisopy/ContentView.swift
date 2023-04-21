@@ -48,7 +48,7 @@ struct ContentView: View {
                     .onHover { hover in
                         self.hovered = hover ? item : nil
                     }
-                    .animation(.easeIn(duration: 0.2), value: hovered)
+                    .animation(.easeIn(duration: 0.15), value: hovered)
                     .swipeActions(edge: .leading) {
                         Button {
                             pinItem(item)

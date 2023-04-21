@@ -59,12 +59,20 @@ struct HisopyApp: App {
         
         Window("Settings", id: "Settings") {
             VStack {
-                LaunchAtLogin.Toggle()
+                HStack {
+                    Text("Launch at login")
+                    Spacer()
+                    LaunchAtLogin.Toggle("")
+                }
                 KeyboardShortcuts.Recorder(for: .popup) {
                     Text("Open clipboard history")
                         .fixedSize()
                 }
-                Stepper("Max items: \(maxItems)", value: $maxItems, in: 5...15)
+                HStack {
+                    Text("Max items")
+                    Spacer()
+                    Stepper("\(maxItems)", value: $maxItems, in: 5...15)
+                }
             }
             .padding(20)
         }
