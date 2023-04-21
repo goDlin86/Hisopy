@@ -39,6 +39,22 @@ struct HisopyApp: App {
 
             HStack {
                 Button(action: {
+                    let fetchRequest = NSFetchRequest<Item>(entityName: "Item")
+                    
+                    do {
+                        let items = try persistenceController.container.viewContext.fetch(fetchRequest)
+                        items.forEach(persistenceController.container.viewContext.delete)
+                        
+                        try persistenceController.container.viewContext.save()
+                    } catch {
+                        let nsError = error as NSError
+                        fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+                    }
+                }) {
+                    Text("Clear history")
+                        .foregroundColor(.white)
+                }
+                Button(action: {
                     NSApp.activate(ignoringOtherApps: true)
                     openWindow(id: "Settings")
                 }) {
@@ -64,9 +80,10 @@ struct HisopyApp: App {
                     Spacer()
                     LaunchAtLogin.Toggle("")
                 }
-                KeyboardShortcuts.Recorder(for: .popup) {
+                HStack {
                     Text("Open clipboard history")
-                        .fixedSize()
+                    Spacer()
+                    KeyboardShortcuts.Recorder(for: .popup)
                 }
                 HStack {
                     Text("Max items")

@@ -25,7 +25,7 @@ struct ContentView: View {
     var body: some View {
         if items.isEmpty {
             Text("No clipboard history")
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .frame(maxWidth: .infinity, minHeight: 300)
                 .foregroundColor(.secondary)
         } else {
             List {
@@ -60,6 +60,7 @@ struct ContentView: View {
                 }
                 .onDelete(perform: deleteItems)
             }
+            .frame(minHeight: 300)
             
         }
     }
