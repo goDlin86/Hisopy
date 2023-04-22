@@ -31,15 +31,18 @@ struct ContentView: View {
             List {
                 ForEach(items) { item in
                     Button(action: {
-                        self.copyItem(item.text ?? "")
+                        self.copyItem(item.text!)
                     }) {
-                        Text(item.text ?? "")
-                            .foregroundColor(.white)
-                            .lineLimit(2)
-                            .multilineTextAlignment(.leading)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(.horizontal, 5)
-                            .padding(.vertical, 2)
+                        HStack {
+                            Text(item.text!)
+                                .foregroundColor(Color(white: 0.85))
+                                .lineLimit(2)
+                                .multilineTextAlignment(.leading)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            Text(realtiveDate.localizedString(for: item.firstCopiedAt!, relativeTo: .now))
+                        }
+                        .padding(.horizontal, 5)
+                        .padding(.vertical, 2)
                     }
                     .buttonStyle(.borderless)
                     .background(item.pin ? .indigo : Color(white: 1, opacity: 0.1))
@@ -105,6 +108,12 @@ private let itemFormatter: DateFormatter = {
     let formatter = DateFormatter()
     formatter.dateStyle = .short
     formatter.timeStyle = .medium
+    return formatter
+}()
+
+private let realtiveDate: RelativeDateTimeFormatter = {
+    let formatter = RelativeDateTimeFormatter()
+    formatter.unitsStyle = .short
     return formatter
 }()
 
