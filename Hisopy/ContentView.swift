@@ -40,6 +40,7 @@ struct ContentView: View {
                                 .multilineTextAlignment(.leading)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                             Text(realtiveDate.localizedString(for: item.firstCopiedAt!, relativeTo: .now))
+                                .font(.subheadline)
                         }
                         .padding(.horizontal, 5)
                         .padding(.vertical, 2)
