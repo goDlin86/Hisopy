@@ -33,39 +33,8 @@ struct HisopyApp: App {
             
             Divider()
 
-            HStack {
-                Button(action: {
-                    let fetchRequest = NSFetchRequest<Item>(entityName: "Item")
-                    
-                    do {
-                        let items = try persistenceController.container.viewContext.fetch(fetchRequest)
-                        items.forEach(persistenceController.container.viewContext.delete)
-                        
-                        try persistenceController.container.viewContext.save()
-                    } catch {
-                        let nsError = error as NSError
-                        fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-                    }
-                }) {
-                    Text("Clear history")
-                        .foregroundColor(.white)
-                }
-                Button(action: {
-                    NSApp.activate(ignoringOtherApps: true)
-                    openWindow(id: "Settings")
-                }) {
-                    Text("Settings")
-                        .foregroundColor(.white)
-                }
-                Button(action: {
-                    NSApplication.shared.terminate(nil)
-                }) {
-                    Text("Quit")
-                        .foregroundColor(.white)
-                }
-                .keyboardShortcut("q")
-            }
-            .padding(.bottom, 7)
+            MenuButtons()
+                .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
         .menuBarExtraStyle(.window)
         
