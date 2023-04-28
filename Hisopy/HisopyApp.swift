@@ -46,7 +46,7 @@ struct HisopyApp: App {
         Window("Clipboard History", id: "History") {
             ContentView()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
-                .frame(width: 300, height: 300)
+                .frame(width: 300, height: 350)
         }
         .defaultPosition(.center)
         .windowResizability(.contentSize)

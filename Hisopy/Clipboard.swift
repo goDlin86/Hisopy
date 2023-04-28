@@ -78,7 +78,7 @@ class Clipboard {
         fetchRequest.sortDescriptors = [
             NSSortDescriptor(keyPath: \Item.firstCopiedAt, ascending: false)
         ]
-        fetchRequest.predicate = NSPredicate(format: "%K == false", #keyPath(Item.pin))
+        fetchRequest.predicate = NSPredicate(format: "pin == false")
         
         do {
             var items = try viewContext.fetch(fetchRequest)

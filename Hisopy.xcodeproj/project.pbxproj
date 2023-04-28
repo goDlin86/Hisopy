@@ -22,6 +22,8 @@
 		92A9C79829C21D53002E2C79 /* HisopyUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92A9C79729C21D53002E2C79 /* HisopyUITestsLaunchTests.swift */; };
 		92A9C7A629C23CCD002E2C79 /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = 92A9C7A529C23CCD002E2C79 /* KeyboardShortcuts */; };
 		92A9C7A829C23D4B002E2C79 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92A9C7A729C23D4B002E2C79 /* Constants.swift */; };
+		92D0AA2829FAEB47002E93A1 /* Search.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92D0AA2729FAEB47002E93A1 /* Search.swift */; };
+		92FE778829FB7E4A0030ED38 /* FilteredList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92FE778729FB7E4A0030ED38 /* FilteredList.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,6 +61,8 @@
 		92A9C79529C21D53002E2C79 /* HisopyUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HisopyUITests.swift; sourceTree = "<group>"; };
 		92A9C79729C21D53002E2C79 /* HisopyUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HisopyUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		92A9C7A729C23D4B002E2C79 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		92D0AA2729FAEB47002E93A1 /* Search.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Search.swift; sourceTree = "<group>"; };
+		92FE778729FB7E4A0030ED38 /* FilteredList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilteredList.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -122,6 +126,8 @@
 				9296691529C3794D008FFF7C /* Clipboard.swift */,
 				9222EB7C29F39B4A00484BCC /* Settings.swift */,
 				9282437C29FABAF20000E057 /* MenuButtons.swift */,
+				92D0AA2729FAEB47002E93A1 /* Search.swift */,
+				92FE778729FB7E4A0030ED38 /* FilteredList.swift */,
 			);
 			path = Hisopy;
 			sourceTree = "<group>";
@@ -289,7 +295,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				92D0AA2829FAEB47002E93A1 /* Search.swift in Sources */,
 				9282437D29FABAF20000E057 /* MenuButtons.swift in Sources */,
+				92FE778829FB7E4A0030ED38 /* FilteredList.swift in Sources */,
 				92A9C7A829C23D4B002E2C79 /* Constants.swift in Sources */,
 				92A9C77E29C21D53002E2C79 /* Persistence.swift in Sources */,
 				92A9C77729C21D52002E2C79 /* ContentView.swift in Sources */,
