@@ -12,9 +12,7 @@ struct MenuButtons: View {
     @Environment(\.openWindow) var openWindow
     @State private var showingAlert = false
     
-    @FetchRequest(
-        sortDescriptors: [],
-        animation: .default)
+    @FetchRequest(sortDescriptors: [])
     private var items: FetchedResults<Item>
     
     var body: some View {
@@ -26,7 +24,7 @@ struct MenuButtons: View {
                     .foregroundColor(.white)
             }
             .confirmationDialog("Do you really want to delete the whole history?", isPresented: $showingAlert) {
-                Button("OK") {
+                Button("Delete all") {
                     deleteAll()
                 }
                 Button("Cancel", role: .cancel) {}

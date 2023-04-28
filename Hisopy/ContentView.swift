@@ -25,7 +25,6 @@ struct ContentView: View {
             VStack {
                 Search(search: $search)
                     .padding([.leading, .top, .trailing], 15)
-
                 FilteredList(search: search)
             }
             
