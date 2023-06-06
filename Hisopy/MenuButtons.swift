@@ -6,14 +6,14 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct MenuButtons: View {
-    @Environment(\.managedObjectContext) private var viewContext
+    @Environment(\.modelContext) private var modelContext
     @Environment(\.openWindow) var openWindow
     @State private var showingAlert = false
     
-    @FetchRequest(sortDescriptors: [])
-    private var items: FetchedResults<Item>
+    @Query private var items: [Item]
     
     var body: some View {
         HStack {
@@ -25,7 +25,9 @@ struct MenuButtons: View {
             }
             .confirmationDialog("Do you really want to delete the whole history?", isPresented: $showingAlert) {
                 Button("Delete all") {
-                    deleteAll()
+                    withAnimation {
+                        items.forEach(modelContext.delete)
+                    }
                 }
                 Button("Cancel", role: .cancel) {}
             }
@@ -46,23 +48,8 @@ struct MenuButtons: View {
         }
         .padding(.bottom, 7)
     }
-    
-    private func deleteAll() {
-        withAnimation {
-            items.forEach(viewContext.delete)
-
-            do {
-                try viewContext.save()
-            } catch {
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-            }
-        }
-    }
 }
 
-struct MenuButtons_Previews: PreviewProvider {
-    static var previews: some View {
-        MenuButtons()
-    }
+#Preview {
+    MenuButtons()
 }

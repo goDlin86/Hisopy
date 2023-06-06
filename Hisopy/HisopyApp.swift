@@ -6,15 +6,32 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct HisopyApp: App {
+    var sharedModelContainer: ModelContainer = {
+        let schema = Schema([
+            Item.self,
+        ])
+        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+
+        do {
+            return try ModelContainer(for: schema, configurations: [modelConfiguration])
+        } catch {
+            fatalError("Could not create ModelContainer: \(error)")
+        }
+    }()
+    
     @Environment(\.openWindow) var openWindow
     
-    private let persistenceController = PersistenceController.shared
     private let clipboard = Clipboard.shared
     private let pubOpen = NotificationCenter.default.publisher(for: NSNotification.Name("open"))
-
+    
+    init() {
+        clipboard.modelContext = sharedModelContainer.mainContext
+    }
+    
     var body: some Scene {
         //Hidden empty window for open History window by keyboard shortcut
         WindowGroup {
@@ -29,12 +46,12 @@ struct HisopyApp: App {
         
         MenuBarExtra("Hisopy", systemImage: "command") {
             ContentView()
-                .environment(\.managedObjectContext, persistenceController.container.viewContext)
+                .modelContainer(sharedModelContainer)
             
             Divider()
 
             MenuButtons()
-                .environment(\.managedObjectContext, persistenceController.container.viewContext)
+                .modelContainer(sharedModelContainer)
         }
         .menuBarExtraStyle(.window)
         
@@ -45,10 +62,10 @@ struct HisopyApp: App {
         
         Window("Clipboard History", id: "History") {
             ContentView()
-                .environment(\.managedObjectContext, persistenceController.container.viewContext)
                 .frame(width: 300, height: 350)
         }
         .defaultPosition(.center)
         .windowResizability(.contentSize)
+        .modelContainer(sharedModelContainer)
     }
 }

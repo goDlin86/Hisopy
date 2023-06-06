@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 import KeyboardShortcuts
 
 class Clipboard {
@@ -25,7 +26,7 @@ class Clipboard {
         //.tiff
     ]
     
-    private let viewContext = PersistenceController.shared.container.viewContext
+    var modelContext: ModelContext?
     private var maxItems: Int { UserDefaults.standard.integer(forKey: "maxItems") }
        
     init() {
@@ -68,33 +69,33 @@ class Clipboard {
                     return
                 }
                 
-                let newItem = Item(context: viewContext)
-                newItem.text = item.string(forType: .string)
-                newItem.firstCopiedAt = Date()
+                let newItem = Item(text: item.string(forType: .string)!, firstCopiedAt: Date())
+                modelContext?.insert(newItem)
             }
         })
         
-        let fetchRequest = NSFetchRequest<Item>(entityName: "Item")
-        fetchRequest.sortDescriptors = [
-            NSSortDescriptor(keyPath: \Item.firstCopiedAt, ascending: false)
-        ]
-        fetchRequest.predicate = NSPredicate(format: "pin == false")
+        let fetchRequest = FetchDescriptor<Item>(
+            predicate: #Predicate { !$0.pin },
+            sortBy: [SortDescriptor(\.firstCopiedAt, order: .reverse)]
+        )
         
-        do {
-            var items = try viewContext.fetch(fetchRequest)
-            items.suffix(from: 1).filter { $0.text == items[0].text }.forEach(viewContext.delete)
-            
-            try viewContext.save()
-            
-            items = try viewContext.fetch(fetchRequest)
-            if items.count > maxItems {
-                items.suffix(from: maxItems).forEach(viewContext.delete)
+        if let modelContext {
+            do {
+                var items = try modelContext.fetch(fetchRequest)
+                items.suffix(from: 1).filter { $0.text == items[0].text }.forEach(modelContext.delete)
+                
+                try modelContext.save()
+                
+                items = try modelContext.fetch(fetchRequest)
+                if items.count > maxItems {
+                    items.suffix(from: maxItems).forEach(modelContext.delete)
+                }
+                
+                try modelContext.save()
+            } catch {
+                let nsError = error as NSError
+                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
             }
-        
-            try viewContext.save()
-        } catch {
-            let nsError = error as NSError
-            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
         }
     }
       

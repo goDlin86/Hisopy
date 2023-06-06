@@ -6,13 +6,10 @@
 //
 
 import SwiftUI
-import CoreData
+import SwiftData
 
 struct ContentView: View {
-    @Environment(\.managedObjectContext) private var viewContext
-
-    @FetchRequest(sortDescriptors: [], animation: .default)
-    private var items: FetchedResults<Item>
+    @Query private var items: [Item]
     
     @State var search: String = ""
 
@@ -32,8 +29,7 @@ struct ContentView: View {
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
-    }
+#Preview {
+    ContentView()
+        .modelContainer(for: Item.self, inMemory: true)
 }

@@ -6,22 +6,23 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct FilteredList: View {
-    @Environment(\.managedObjectContext) private var viewContext
+    @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) var dismiss
-    
-    @FetchRequest var items: FetchedResults<Item>
+       
+    @Query private var items: [Item]
     
     @State var hovered: Item?
     
     init(search: String) {
-        _items = FetchRequest<Item>(
-            sortDescriptors: [
+        _items = Query(
+            filter: #Predicate { !search.isEmpty ? $0.text.contains(search) : true },
+            sort: [
                 SortDescriptor(\.pin, order: .reverse),
                 SortDescriptor(\.firstCopiedAt, order: .reverse)
             ],
-            predicate: !search.isEmpty ? NSPredicate(format: "text CONTAINS[c] %@", search) : nil,
             animation: .default
         )
     }
@@ -35,15 +36,15 @@ struct FilteredList: View {
             List {
                 ForEach(items) { item in
                     Button(action: {
-                        self.copyItem(item.text!)
+                        self.copyItem(item.text)
                     }) {
                         HStack {
-                            Text(item.text!)
+                            Text(item.text)
                                 .foregroundColor(Color(white: 0.85))
                                 .lineLimit(2)
                                 .multilineTextAlignment(.leading)
                                 .frame(maxWidth: .infinity, alignment: .leading)
-                            Text(relativeDate.localizedString(for: item.firstCopiedAt!, relativeTo: .now))
+                            Text(relativeDate.localizedString(for: item.firstCopiedAt, relativeTo: .now))
                                 .font(.subheadline)
                         }
                         .padding(.horizontal, 5)
@@ -87,25 +88,13 @@ struct FilteredList: View {
     private func pinItem(_ item: Item) {
         withAnimation {
             item.pin = !item.pin
-            
-            do {
-                try viewContext.save()
-            } catch {
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-            }
         }
     }
     
     private func deleteItems(offsets: IndexSet) {
         withAnimation {
-            offsets.map { items[$0] }.forEach(viewContext.delete)
-
-            do {
-                try viewContext.save()
-            } catch {
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+            for index in offsets {
+                modelContext.delete(items[index])
             }
         }
     }
@@ -124,9 +113,7 @@ private let relativeDate: RelativeDateTimeFormatter = {
     return formatter
 }()
 
-struct FilteredList_Previews: PreviewProvider {
-    static var previews: some View {
-        FilteredList(search: "ssda")
-            .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
-    }
+#Preview {
+    FilteredList(search: "ssda")
+        .modelContainer(for: Item.self, inMemory: true)
 }
